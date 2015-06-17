@@ -1,9 +1,13 @@
 PORT = registry('env.port')
 
+boxfile = payload[:boxfile]
 
+directory '/var/log/gonano' do
+  recursive true
+end
 
-if boxfile[:exec].is_a? String do
-  directory '/etc/service/app/run' do
+if boxfile[:exec].is_a? String
+  directory '/etc/service/app' do
     recursive true
   end
 
@@ -12,7 +16,7 @@ if boxfile[:exec].is_a? String do
     variables ({ exec: boxfile[:exec] })
   end
   
-  directory '/etc/service/app/log/run' do
+  directory '/etc/service/app/log' do
     recursive true
   end
 
@@ -21,9 +25,9 @@ if boxfile[:exec].is_a? String do
     source 'log-run.erb'
     variables ({ svc: "app" })
   end
-elsif boxfile[:exec].is_a? Hash do
+elsif boxfile[:exec].is_a? Hash
   boxfile[:exec].each do |name, exec|
-    directory "/etc/service/#{name}/run" do
+    directory "/etc/service/#{name}" do
       recursive true
     end
 
@@ -32,7 +36,7 @@ elsif boxfile[:exec].is_a? Hash do
       variables ({ exec: exec })
     end
   
-    directory "/etc/service/#{name}/log/run" do
+    directory "/etc/service/#{name}/log" do
       recursive true
     end
 
@@ -43,7 +47,7 @@ elsif boxfile[:exec].is_a? Hash do
     end
   end
 else
-  directory '/etc/service/app/run' do
+  directory '/etc/service/app' do
     recursive true
   end
 
@@ -54,7 +58,7 @@ else
     variables ({ exec: "python -m SimpleHTTPServer #{PORT}" })
   end
   
-  directory '/etc/service/app/log/run' do
+  directory '/etc/service/app/log' do
     recursive true
   end
 
