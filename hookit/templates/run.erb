@@ -1,0 +1,11 @@
+#!/bin/sh -e
+exec 2>&1
+export PATH="/opt/local/sbin:/opt/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+<%
+  vars = File.read('/etc/environment.d/nano-envs').split("\n") 
+  vars.each do |var|
+-%>
+<%= var %>
+<% end -%>
+    
+exec <%= exec %>
