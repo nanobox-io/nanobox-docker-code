@@ -1,10 +1,10 @@
 #!/bin/sh -e
 exec 2>&1
 
-export PATH="/data/code/sbin:/data/code/bin:/data/sbin:/data/bin:/opt/gonano/sbin:/opt/gonano/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-<% envs.each do |k, v| -%>
+export PATH="<%= path %>"
+<% env_vars.each do |k, v| -%>
 export <%= k %>="<%= v %>"
 <% end -%>
 
-cd /data/code
+cd <%= code_dir %>
 exec <%= exec %>

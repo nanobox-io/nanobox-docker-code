@@ -27,8 +27,10 @@ if boxfile[:exec].is_a? String
   template '/etc/service/app/run' do
     mode 0755
     variables ({ 
-      exec: boxfile[:exec],
-      envs: env_vars 
+      path: PATH,
+      code_dir: CODE_DIR,
+      env_vars: env_vars,
+      exec: boxfile[:exec]
     })
   end
   
@@ -52,8 +54,10 @@ elsif boxfile[:exec].is_a? Hash
     template "/etc/service/#{name}/run" do
       mode 0755
       variables ({
-        exec: exec,
-        envs: env_vars
+        path: PATH,
+        code_dir: CODE_DIR,
+        env_vars: env_vars,
+        exec: exec
       })
     end
   
