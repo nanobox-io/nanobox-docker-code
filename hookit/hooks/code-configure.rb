@@ -1,3 +1,6 @@
+# import some logic/helpers from lib/engine.rb
+include NanoBox::Engine
+
 # import some logic/helpers from hookit
 include Hookit::Helper::Shell 
 
@@ -27,7 +30,7 @@ if boxfile[:exec].is_a? String
   template '/etc/service/app/run' do
     mode 0755
     variables ({ 
-      path: PATH,
+      path: GONANO_PATH,
       code_dir: CODE_DIR,
       env_vars: env_vars,
       exec: boxfile[:exec]
@@ -54,7 +57,7 @@ elsif boxfile[:exec].is_a? Hash
     template "/etc/service/#{name}/run" do
       mode 0755
       variables ({
-        path: PATH,
+        path: GONANO_PATH,
         code_dir: CODE_DIR,
         env_vars: env_vars,
         exec: exec
