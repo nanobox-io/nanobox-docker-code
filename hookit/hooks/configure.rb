@@ -75,3 +75,25 @@ elsif boxfile[:exec].is_a? Hash
     end
   end
 end
+
+# Configure narc
+template '/opt/gonano/etc/narc.conf' do
+  variables ({
+    uid: payload[:uid],
+    app: "nanobox",
+    boxfile: boxfile,
+    logtap: payload[:logtap_uri]
+  })
+end
+
+directory '/etc/service/narc'
+
+file '/etc/service/narc/run' do
+  mode 0755
+  content <<-EOF
+#!/bin/sh -e
+export PATH="/opt/local/sbin:/opt/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/gonano/sbin:/opt/gonano/bin"
+
+exec /opt/gonano/bin/narcd /opt/gonano/etc/narc.conf
+  EOF
+end
