@@ -37,7 +37,7 @@ if boxfile[:network_dirs].any?
   end
 
   # For idempotency
-  execute "umountall -F nfs || true"
+  execute "umount -a -t nfs || true"
 
 end
 
