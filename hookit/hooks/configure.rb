@@ -20,6 +20,106 @@ env_vars = ::Dir.glob('/data/etc/environment.d/*').inject({}) do |result, file|
   result
 end
 
+# 1.5) mount network dirs
+# make a link for compatibility
+link '/var/www' do
+  to '/data'
+  owner 'gonano'
+  group 'gonano'
+end
+
+# Mount storage components
+# Temporarily mount each storage service used
+if boxfile[:network_dirs].any?
+  directory "/mnt" do
+    owner 'gonano'
+    group 'gonano'
+  end
+
+  # For idempotency
+  execute "umountall -F nfs || true"
+
+end
+
+payload[:storage].each do |component, info|
+
+  if boxfile[:network_dirs].has_key? component
+
+    # create source directory if doesn't exist
+    directory "/mnt/#{component}" do
+      owner 'gonano'
+      group 'gonano'
+      recursive true
+    end
+
+    mount "mount #{component}" do
+      mount_point "/mnt/#{component}"
+      device "#{info[:host]}:/datas"
+      options "rw,intr,proto=tcp,vers=3,noock"
+      fstype "nfs"
+      action :mount
+      not_if  { `mount | grep -c /mnt/#{component}`.to_i > 0 }
+    end
+  end
+end
+
+# Create writable dirs for each storage service used
+boxfile[:network_dirs].each do |component, writables|
+
+  writables.each do |write|
+
+    execute "create dirs - handling nested" do
+      command "mkdir -p /mnt/#{component}/#{write}"
+      user 'gonano'
+    end
+
+    if !File.directory?("#{CODE_DIR}/#{write}") && File.exist?("#{CODE_DIR}/#{write}")
+      logvac.puts <<-EOF
+▼▼▼▼▼▼▼▼▼▼▼▼ :: WARNING :: ▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+
+The network directory '#{write}' is not a folder.
+This may cause unexpected behavior. Review the following
+guide for more information : bit.ly/1pWDt0N
+
+▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+      EOF
+    end
+
+    # Remove mountpoint in case it exists
+    execute "rm -rf #{CODE_DIR}/#{write}"
+
+    # Create mountpoint
+    directory "#{CODE_DIR}/#{write}" do
+      recursive true
+      owner 'gonano'
+      group 'gonano'
+    end
+  end
+end
+
+# Mount network writable dirs
+payload[:storage].each do |component, info|
+
+  boxfile[:network_dirs].each do |store, writables|
+
+    if store == component
+
+      writables.each do |write|
+
+        mount "mount #{component}" do
+          mount_point "#{CODE_DIR}/#{write}"
+          device "#{info[:host]}:/datas/#{write}"
+          options "rw,intr,proto=tcp,vers=3,nolock"
+          fstype "nfs"
+          action :enable, :mount
+          not_if  { `mount | grep -c #{CODE_DIR}/#{write}`.to_i > 0 }
+        end
+      end
+
+    end
+  end
+end
+
 # 2) write runit service definitions
 if boxfile[:exec].is_a? String
 
