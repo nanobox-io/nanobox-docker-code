@@ -4,6 +4,10 @@ include NanoBox::Engine
 # import some logic/helpers from hookit
 include Hookit::Helper::Shell 
 
+# Sanitize network dir
+include Hookit::Helper::NFS
+boxfile[:network_dirs] = sanitize_network_dirs(payload) if payload[:storage]
+
 # 'payload' is a helper function within the hookit framework that will parse
 # input provided as JSON into a hash with symbol keys.
 # https://github.com/pagodabox/hookit/blob/master/lib/hookit/hook.rb#L7-L17
@@ -38,7 +42,6 @@ if boxfile[:network_dirs].any?
 
   # For idempotency
   execute "umount -a -t nfs || true"
-
 end
 
 payload[:storage].each do |component, info|
@@ -55,7 +58,7 @@ payload[:storage].each do |component, info|
     mount "mount #{component}" do
       mount_point "/mnt/#{component}"
       device "#{info[:host]}:/datas"
-      options "rw,intr,proto=tcp,vers=3,noock"
+      options "rw,intr,proto=tcp,vers=3,nolock"
       fstype "nfs"
       action :mount
       not_if  { `mount | grep -c /mnt/#{component}`.to_i > 0 }
