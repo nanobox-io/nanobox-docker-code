@@ -6,7 +6,6 @@ include Hookit::Helper::Shell
 
 # Sanitize network dir
 include Hookit::Helper::NFS
-boxfile[:network_dirs] = sanitize_network_dirs(payload) if payload[:storage]
 
 # 'payload' is a helper function within the hookit framework that will parse
 # input provided as JSON into a hash with symbol keys.
@@ -15,6 +14,7 @@ boxfile[:network_dirs] = sanitize_network_dirs(payload) if payload[:storage]
 # Now we extract the 'boxfile' section of the payload, which is only the
 # section of the Boxfile relevant to this service, such as 'web1' or 'worker1'
 boxfile = payload[:boxfile] || {}
+boxfile[:network_dirs] = sanitize_network_dirs(payload) if payload[:storage]
 
 # 1) prepare environment variables
 env_vars = ::Dir.glob('/data/etc/environment.d/*').inject({}) do |result, file|
