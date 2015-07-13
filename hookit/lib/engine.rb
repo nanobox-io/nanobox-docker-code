@@ -16,5 +16,22 @@ module NanoBox
       '/sbin',
       '/bin'
     ].join (':')
+
+    def storage
+      $storage ||= begin
+        payload[:storage] || []
+      end
+    end
+
+    def network_dirs
+      $network_dirs ||= begin
+        if payload[:storage]
+          sanitize_network_dirs(payload) 
+        else
+          []
+        end
+      end
+    end
+
   end
 end

@@ -14,7 +14,6 @@ include Hookit::Helper::NFS
 # Now we extract the 'boxfile' section of the payload, which is only the
 # section of the Boxfile relevant to this service, such as 'web1' or 'worker1'
 boxfile = payload[:boxfile] || {}
-boxfile[:network_dirs] = (sanitize_network_dirs(payload) if payload[:storage]) || []
 
 # 1) prepare environment variables
 env_vars = ::Dir.glob('/data/etc/environment.d/*').inject({}) do |result, file|
@@ -34,7 +33,7 @@ end
 
 # Mount storage components
 # Temporarily mount each storage service used
-if boxfile[:network_dirs].any?
+if network_dirs.any?
   directory "/mnt" do
     owner 'gonano'
     group 'gonano'
@@ -44,9 +43,9 @@ if boxfile[:network_dirs].any?
   execute "umount -a -t nfs || true"
 end
 
-payload[:storage].each do |component, info|
+storage.each do |component, info|
 
-  if boxfile[:network_dirs].has_key? component
+  if network_dirs.has_key? component
 
     # create source directory if doesn't exist
     directory "/mnt/#{component}" do
@@ -67,7 +66,7 @@ payload[:storage].each do |component, info|
 end
 
 # Create writable dirs for each storage service used
-boxfile[:network_dirs].each do |component, writables|
+network_dirs.each do |component, writables|
 
   writables.each do |write|
 
@@ -101,9 +100,9 @@ guide for more information : bit.ly/1pWDt0N
 end
 
 # Mount network writable dirs
-payload[:storage].each do |component, info|
+storage.each do |component, info|
 
-  boxfile[:network_dirs].each do |store, writables|
+  network_dirs.each do |store, writables|
 
     if store == component
 
