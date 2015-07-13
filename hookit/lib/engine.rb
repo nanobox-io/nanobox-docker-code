@@ -1,7 +1,7 @@
 module NanoBox
   module Engine
     BUILD_DIR   = '/data'
-    CODE_DIR    = "#{BUILD_DIR}/code"
+    CODE_DIR    = '/code'
     GONANO_PATH = [
       CODE_DIR,
       "#{CODE_DIR}/bin",
