@@ -1,10 +1,10 @@
-all: base
+all: image
 
-base:
+image:
 ifdef docker_user
-	vagrant up && vagrant destroy -f
+	vagrant up
 else
-	export docker_user='nanobox' && vagrant up && vagrant destroy -f
+	export docker_user='nanobox' && vagrant up
 endif
 
 publish:
