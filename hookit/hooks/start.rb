@@ -12,5 +12,9 @@ if boxfile[:exec].is_a? Hash
     execute "sv start #{name}"
   end
 else
-  execute 'sv start app'
+  execute 'start app' do
+    command 'sv start app'
+    stream true
+    on_data {|d| print d}
+  end
 end
