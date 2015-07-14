@@ -16,5 +16,6 @@ else
     command 'sv start app'
     stream true
     on_data {|d| print d}
+    on_exit { |code| puts "exit: #{code}"}
   end
 end
