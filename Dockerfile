@@ -1,4 +1,4 @@
-FROM nanobox/base
+FROM nanobox/runit
 
 # Create directories
 RUN mkdir -p /var/log/gonano
@@ -13,10 +13,7 @@ RUN apt-get update -qq && \
     rm -rf /var/lib/apt/lists/*
 
 # Cleanup disk
-RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /data/var/db/pkgin
-
-# Allow ssh
-EXPOSE 22
+RUN rm -rf /tmp/* /var/tmp/*
 
 # Run runit automatically
 CMD /sbin/my_init
