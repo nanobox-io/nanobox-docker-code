@@ -18,4 +18,4 @@ RUN apt-get update -qq && \
 RUN rm -rf /tmp/* /var/tmp/*
 
 # Run runit automatically
-CMD /sbin/my_init
+CMD /opt/gonano/bin/nanoinit
