@@ -1,29 +1,18 @@
 # import some logic/helpers from lib/engine.rb
 include NanoBox::Engine
 
-# import some logic/helpers from hookit
-include Hookit::Helper::Shell 
-
 # Sanitize network dir
 include Hookit::Helper::NFS
 
 # 'payload' is a helper function within the hookit framework that will parse
 # input provided as JSON into a hash with symbol keys.
 # https://github.com/pagodabox/hookit/blob/master/lib/hookit/hook.rb#L7-L17
-# 
+#
 # Now we extract the 'boxfile' section of the payload, which is only the
 # section of the Boxfile relevant to this service, such as 'web1' or 'worker1'
 boxfile = payload[:boxfile] || {}
 
-# 1) prepare environment variables
-env_vars = ::Dir.glob('/data/etc/environment.d/*').inject({}) do |result, file|
-  name = escape_shell_string(::File.basename(file))
-  value = escape_shell_string(::File.read(file))
-  result[name] = value
-  result
-end
-
-# 1.5) mount network dirs
+# 1) mount network dirs
 # make a link for compatibility
 link '/var/www' do
   to '/data'
@@ -131,14 +120,13 @@ if boxfile[:exec].is_a? String
 
   template '/etc/service/app/run' do
     mode 0755
-    variables ({ 
-      path: GONANO_PATH,
+    variables ({
       code_dir: CODE_DIR,
-      env_vars: env_vars,
+      env_dir: ENV_DIR,
       exec: boxfile[:exec]
     })
   end
-  
+
   directory '/etc/service/app/log' do
     recursive true
   end
@@ -159,13 +147,12 @@ elsif boxfile[:exec].is_a? Hash
     template "/etc/service/#{name}/run" do
       mode 0755
       variables ({
-        path: GONANO_PATH,
         code_dir: CODE_DIR,
-        env_vars: env_vars,
+        env_dir: ENV_DIR,
         exec: exec
       })
     end
-  
+
     directory "/etc/service/#{name}/log" do
       recursive true
     end
