@@ -1,0 +1,3 @@
+#!/bin/bash
+
+/opt/gonano/bin/hookit default-before_deploy "${1}"
