@@ -11,7 +11,7 @@ build:
 
 publish:
 	@echo "Tagging 'code' image..."
-	@vagrant ssh -c "docker tag nanobox/code nanobox/code:${stability}"
+	@vagrant ssh -c "docker tag -f nanobox/code nanobox/code:${stability}"
 	@echo "Publishing 'code:${stability}'..."
 	@vagrant ssh -c "docker push nanobox/code:${stability}"
 
