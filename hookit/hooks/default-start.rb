@@ -9,13 +9,12 @@ boxfile = payload[:boxfile] || {}
 if boxfile[:exec].is_a? Hash
   # convert to 'runit' init-type hookit 'service'
   boxfile[:exec].each do |name, exec|
-    execute "sv start #{name}"
+    service name do
+      action :enable
+    end
   end
 else
-  execute 'start app' do
-    command 'sv start app'
-    stream true
-    on_data {|d| print d}
-    on_exit { |code| puts "exit: #{code}"}
+  service 'app' do
+    action :enable
   end
 end
