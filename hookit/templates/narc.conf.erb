@@ -62,6 +62,6 @@ stream <%= uid %>.app[daemon] /var/log/gonano/app/current
 <%
 end
 -%>
-<% boxfile[:log_watch].each do |key, value| -%>
+<% (boxfile[:log_watch] || []).each do |key, value| -%>
 stream <%= uid %>.<%= key %> <%= value %>
 <% end -%>
