@@ -171,7 +171,7 @@ template '/opt/gonano/etc/narc.conf' do
     uid: payload[:uid],
     app: "nanobox",
     boxfile: boxfile,
-    logtap: payload[:logtap_uri]
+    logtap_host: payload[:logtap_host]
   })
 end
 
