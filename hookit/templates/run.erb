@@ -6,14 +6,6 @@ exec 2>&1
 # clear PATH so we can explicitly build it
 export PATH=""
 
-# source any environment variables that were dropped by engines
-# including, perhaps, a custom PATH
-if [ -d <%= env_dir %> ]; then
-        for env in $(ls $<%= env_dir %>); do
-                export "$env=$(cat <%= env_dir %>/$env)"
-        done
-fi
-
 # if the engine manipulated the PATH, let's append to it instead of reset
 if [[ -n $PATH ]]; then
         export PATH=${PATH}:
@@ -27,6 +19,14 @@ export PATH=/opt/gonano/sbin:/opt/gonano/bin:${PATH}
 
 # prefix all with base bootstrap
 export PATH=/data/sbin:/data/bin:${PATH}
+
+# source any environment variables that were dropped by engines
+# including, perhaps, a custom PATH
+if [ -d <%= env_dir %> ]; then
+        for env in $(ls <%= env_dir %>); do
+                export "$env=$(cat <%= env_dir %>/$env)"
+        done
+fi
 
 cd <%= code_dir %>
 exec <%= exec %>
