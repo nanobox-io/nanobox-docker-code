@@ -8,6 +8,11 @@ RUN mkdir -p /opt/bin
 ADD hookit/. /opt/gonano/hookit/mod/
 ADD files/opt/bin/. /opt/bin/
 
+# remove pkgsrc base bootstrap to save space
+# since it's replaced by the build and not used
+RUN rm -rf /data && \
+    mkdir -p /data
+
 # Allow nfs mounts
 RUN apt-get update -qq && \
     apt-get install -y nfs-common && \
