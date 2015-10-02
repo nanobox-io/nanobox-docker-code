@@ -13,7 +13,7 @@ if boxfile[:exec].is_a? Hash
       action :enable
     end
   end
-else
+elsif boxfile[:exec].is_a? String
   service 'app' do
     action :enable
   end

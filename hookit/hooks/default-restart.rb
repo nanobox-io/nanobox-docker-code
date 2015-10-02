@@ -17,6 +17,6 @@ if boxfile[:exec].is_a? Hash
   boxfile[:exec].each do |name, exec|
     execute "sv restart #{name}"
   end
-else
+elsif boxfile[:exec].is_a? String
   execute 'sv restart app'
 end

@@ -12,20 +12,6 @@ include Hookit::Helper::NFS
 # section of the Boxfile relevant to this service, such as 'web1' or 'worker1'
 boxfile = payload[:boxfile] || {}
 
-# 0) quit out if exec is nil
-if boxfile[:exec].nil?
-  logvac.puts <<-EOF
-▼▼▼▼▼▼▼▼▼▼▼▼ :: ERROR :: ▼▼▼▼▼▼▼▼▼▼▼▼▼▼
-
-The Boxfile is missing an command to exec for 
-this service. Review the following guide for 
-more information : bit.ly/1RiArU4
-
-▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
-      EOF
-  exit 1
-end
-
 # 1) mount network dirs
 # make a link for compatibility
 link '/var/www' do
@@ -79,7 +65,16 @@ network_dirs.each do |component, writables|
     end
 
     if !File.directory?("#{CODE_DIR}/#{write}") && File.exist?("#{CODE_DIR}/#{write}")
-      logvac.puts <<-EOF
+#       logvac.puts <<-EOF
+# ▼▼▼▼▼▼▼▼▼▼▼▼ :: WARNING :: ▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+
+# The network directory '#{write}' is not a folder.
+# This may cause unexpected behavior. Review the following
+# guide for more information : bit.ly/1pWDt0N
+
+# ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+#       EOF
+      puts <<-EOF
 ▼▼▼▼▼▼▼▼▼▼▼▼ :: WARNING :: ▼▼▼▼▼▼▼▼▼▼▼▼▼▼
 
 The network directory '#{write}' is not a folder.

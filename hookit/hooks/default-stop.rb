@@ -11,6 +11,6 @@ if boxfile[:exec].is_a? Hash
   boxfile[:exec].each do |name, exec|
     execute "sv stop #{name}"
   end
-else
+elsif boxfile[:exec].is_a? String
   execute 'sv stop app'
 end
