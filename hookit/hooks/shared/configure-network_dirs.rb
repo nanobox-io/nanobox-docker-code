@@ -48,7 +48,8 @@ network_dirs.each do |service, writables|
         # ensure the parent directory already exists
         directory "/mnt/#{service}#{::File.dirname "/#{write}"}" do
           recursive true
-          user 'gonano'
+          owner 'gonano'
+          group 'gonano'
         end
 
         # copy the file
@@ -60,6 +61,8 @@ network_dirs.each do |service, writables|
         # create a link back to the network-backed file
         link "/mnt/#{service}/#{write}" do
           to "#{CODE_DIR}/#{write}"
+          owner 'gonano'
+          group 'gonano'
         end
 
       end
@@ -67,7 +70,8 @@ network_dirs.each do |service, writables|
     else
       directory "/mnt/#{service}/#{write}" do
         recursive true
-        user 'gonano'
+        owner 'gonano'
+        group 'gonano'
       end
 
       # Create mountpoint
