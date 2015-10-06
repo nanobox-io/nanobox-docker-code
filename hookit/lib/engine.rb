@@ -2,18 +2,17 @@ module NanoBox
   module Engine
     BUILD_DIR   = '/data'
     CODE_DIR    = '/code'
-    ENV_DIR     = '/data/etc/env.d'
 
     def storage
       $storage ||= begin
-        payload[:storage] || []
+        get(:configure_payload)[:storage] || [] rescue []
       end
     end
 
     def network_dirs
       $network_dirs ||= begin
-        if payload[:storage]
-          sanitize_network_dirs(payload)
+        if not storage.empty?
+          sanitize_network_dirs(get(:configure_payload))
         else
           []
         end
