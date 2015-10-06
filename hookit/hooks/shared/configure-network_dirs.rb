@@ -15,7 +15,7 @@ end
 # raw mount from the service into /mnt
 storage.each do |service, info|
 
-  if network_dirs.has_key? service
+  if network_dirs.has_key? service.to_sym
 
     # create source directory if doesn't exist
     directory "/mnt/#{service}" do
