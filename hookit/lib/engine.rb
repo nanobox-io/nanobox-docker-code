@@ -5,6 +5,7 @@ module NanoBox
   module Engine
     BUILD_DIR   = '/data'
     CODE_DIR    = '/code'
+    ENV_DIR     = '/data/etc/env.d'
 
     def storage
       $storage ||= begin
