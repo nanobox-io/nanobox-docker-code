@@ -1,3 +1,6 @@
+# Sanitize network dir
+include Hookit::Helper::NFS
+
 module NanoBox
   module Engine
     BUILD_DIR   = '/data'

@@ -1,9 +1,6 @@
 # import some logic/helpers from lib/engine.rb
 include NanoBox::Engine
 
-# Sanitize network dir
-include Hookit::Helper::NFS
-
 # 'payload' is a helper function within the hookit framework that will parse
 # input provided as JSON into a hash with symbol keys.
 # https://github.com/pagodabox/hookit/blob/master/lib/hookit/hook.rb#L7-L17
