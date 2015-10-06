@@ -12,11 +12,25 @@ if boxfile[:restart] and boxfile[:restart] = false
   exit Hookit::Exit::SUCCESS
 end
 
+# with runit, a 'restart' doesn't seem to keep the same environment context
+# that the service was started within. Thus, we'll just stop the service and
+# then start it again.
+
 if boxfile[:exec].is_a? Hash
   # convert to 'runit' init-type hookit 'service'
   boxfile[:exec].each do |name, exec|
-    execute "sv restart #{name}"
+    service name do
+      action :disable
+    end
+    service name do
+      action :enable
+    end
   end
 elsif boxfile[:exec].is_a? String
-  execute 'sv restart app'
+  service 'app' do
+    action :disable
+  end
+  service 'app' do
+    action :enable
+  end
 end

@@ -9,8 +9,12 @@ boxfile = payload[:boxfile] || {}
 if boxfile[:exec].is_a? Hash
   # convert to 'runit' init-type hookit 'service'
   boxfile[:exec].each do |name, exec|
-    execute "sv stop #{name}"
+    service name do
+      action :disable
+    end
   end
 elsif boxfile[:exec].is_a? String
-  execute 'sv stop app'
+  service 'app' do
+    action :disable
+  end
 end
