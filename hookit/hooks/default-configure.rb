@@ -8,7 +8,7 @@ include NanoBox::Engine
 # since the nfs network_dirs will need to be configured and re-configured
 # after multiple hooks, we'll need to ensure that the payload required
 # can be accessible to hooks where the payload provided doesn't exist.
-set(:configure_payload, payload)
+registry(:configure_payload, payload)
 
 # Now we extract the 'boxfile' section of the payload, which is only the
 # section of the Boxfile relevant to this service, such as 'web1' or 'worker1'
