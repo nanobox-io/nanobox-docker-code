@@ -24,7 +24,7 @@ module NanoBox
     end
 
     def configure_payload
-      symbolize_keys(registry(:configure_payload))
+      symbolize_keys(registry("configure_payload"))
     end
 
     # helper function to recursively convert hash keys from strings to symbols
