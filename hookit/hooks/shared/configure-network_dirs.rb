@@ -26,7 +26,7 @@ storage.each do |service, info|
 
     mount "mount #{service}" do
       mount_point "/mnt/#{service}"
-      device "#{info[:host]}:/datas"
+      device "#{info[:host]}:/data/var/db/nfs"
       options "rw,intr,proto=tcp,vers=3,nolock"
       fstype "nfs"
       action :mount
@@ -83,7 +83,7 @@ network_dirs.each do |service, writables|
 
       mount "mount #{service}" do
         mount_point "#{CODE_DIR}/#{write}"
-        device "#{storage[service.to_sym][:host]}:/datas/#{write}"
+        device "#{storage[service.to_sym][:host]}:/data/var/db/nfs/#{write}"
         options "rw,intr,proto=tcp,vers=3,nolock"
         fstype "nfs"
         action :enable, :mount
