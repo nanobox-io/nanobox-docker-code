@@ -59,8 +59,8 @@ network_dirs.each do |service, writables|
         end
 
         # create a link back to the network-backed file
-        link "/mnt/#{service}/#{write}" do
-          to "#{CODE_DIR}/#{write}"
+        link "#{CODE_DIR}/#{write}" do
+          to "/mnt/#{service}/#{write}"
           owner 'gonano'
           group 'gonano'
         end
