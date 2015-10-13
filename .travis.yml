@@ -6,4 +6,4 @@ services:
 before_install:
   - docker build -t nanobox/code .
 
-script: sudo tests/run.sh $VERSION
+script: sudo tests/run.sh
