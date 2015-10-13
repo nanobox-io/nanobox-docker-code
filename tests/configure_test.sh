@@ -4,7 +4,7 @@ UUID=$(cat /proc/sys/kernel/random/uuid)
 PAYLOAD='{"platform":"local","boxfile":{"extensions":{},"locale":"en_US.UTF-8"},"uid":"'$UUID'","logtap_host":"127.0.0.1"}'
 echo boxfile: "$PAYLOAD"
 
-pass "unable to start the $VERSION container" docker run --privileged=true -d --name $UUID nanobox/mariadb:$VERSION
+pass "unable to start the $VERSION container" docker run --privileged=true -d --name $UUID nanobox/code:$VERSION
 defer docker kill $UUID
 
 # we should be able to run the basic configure hook
