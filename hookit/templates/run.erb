@@ -1,16 +1,32 @@
-#!/bin/sh -e
+#!/bin/bash
+
+# redirect stderr to stdout
 exec 2>&1
-export PATH="/opt/local/sbin:/opt/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-<%
-if File.exist?('/data/etc/environment.d/nano-envs')
-# This will have lines like: "export DB1_HOST='192.168.0.17'"
-  vars = File.read('/data/etc/environment.d/nano-envs').split("\n")
-  vars.each do |var|
--%>
-<%= var %>
-<%
-  end
-end
--%>
-    
+
+# clear PATH so we can explicitly build it
+export PATH=""
+
+# source any environment variables that were dropped by engines
+# including, perhaps, a custom PATH
+if [ -d <%= env_dir %> ]; then
+        for env in $(/bin/ls <%= env_dir %>); do
+                export "$env=$(/bin/cat <%= env_dir %>/$env)"
+        done
+fi
+
+# if the engine manipulated the PATH, let's append to it instead of reset
+if [[ -n $PATH ]]; then
+        export PATH=${PATH}:
+fi
+
+# set the defaults
+export PATH=${PATH}/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+# prefix defaults with the gonano pkgsrc bootstrap
+export PATH=/opt/gonano/sbin:/opt/gonano/bin:${PATH}
+
+# prefix all with base bootstrap
+export PATH=/data/sbin:/data/bin:${PATH}
+
+cd <%= code_dir %>
 exec <%= exec %>

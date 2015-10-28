@@ -1,1 +1,0 @@
-exit 0 unless boxfile[:after_deploy]
