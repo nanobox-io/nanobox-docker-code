@@ -4,7 +4,7 @@
 exec 2>&1
 
 # clear PATH so we can explicitly build it
-export PATH=""
+PATH=""
 
 # source any environment variables that were dropped by engines
 # including, perhaps, a custom PATH
@@ -16,17 +16,20 @@ fi
 
 # if the engine manipulated the PATH, let's append to it instead of reset
 if [[ -n $PATH ]]; then
-        export PATH=${PATH}:
+        MYPATH=${PATH}:
 fi
 
 # set the defaults
-export PATH=${PATH}/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 # prefix defaults with the gonano pkgsrc bootstrap
-export PATH=/opt/gonano/sbin:/opt/gonano/bin:${PATH}
+PATH=/opt/gonano/sbin:/opt/gonano/bin:${PATH}
 
 # prefix all with base bootstrap
-export PATH=/data/sbin:/data/bin:${PATH}
+PATH=/data/sbin:/data/bin:${PATH}
+
+# prefix with custom path
+export PATH=${MYPATH}${PATH}
 
 cd <%= code_dir %>
 exec <%= exec %>
