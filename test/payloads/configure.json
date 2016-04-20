@@ -1,0 +1,27 @@
+{
+  "logvac_host": "127.0.0.1",
+  "config": {},
+  "member": {
+    "local_ip": "192.168.0.2",
+    "uid": "1",
+    "role": "primary"
+  },
+  "component": {
+    "uid": "portal1",
+    "id": "9097d0a7-7e02-4be5-bce1-3d7cb1189488"
+  },
+  "mounts": [
+    {
+      "host": "192.168.1.2",
+      "protocol": "nfs",
+      "shares": [
+        "/foo/bar",
+        "/baz/boa"
+      ]
+    }
+  ],
+  "writable_dirs": [
+    "/a/b",
+    "/foo/bar"
+  ]
+}

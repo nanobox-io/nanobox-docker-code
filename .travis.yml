@@ -1,9 +1,14 @@
 sudo: required
 
-services:
-  - docker
+dist: trusty
 
 before_install:
+  - sudo apt-get -y purge docker-engine
+  - bash <(curl -fsSL https://get.docker.com/)
+  - docker version
+  - docker network create --driver=bridge --subnet=192.168.0.0/16 --opt="com.docker.network.driver.mtu=1450" --opt="com.docker.network.bridge.name=redd0" nanobox
+  - ifconfig
+  - docker pull nanobox/hoarder
   - docker build -t nanobox/code .
 
-script: sudo tests/run.sh
+script: sudo test/run_all.sh
