@@ -1,5 +1,11 @@
 FROM nanobox/runit
 
+# Create directories
+RUN mkdir -p \
+  /var/log/gonano \
+  /var/nanobox \
+  /opt/nanobox/hooks
+
 # Install nfs client
 RUN apt-get update -qq && \
     apt-get install -y nfs-common && \
@@ -11,11 +17,19 @@ RUN apt-get update -qq && \
 RUN rm -rf /data && \
     mkdir -p /data
 
-# Created necessary directories
-RUN mkdir -p /opt/nanobox
+# Install hooks
+RUN curl \
+      -f \
+      -k \
+      https://s3.amazonaws.com/tools.nanobox.io/hooks/code-stable.tgz \
+        | tar -xz -C /opt/nanobox/hooks
 
-# Copy files
-ADD files/opt/nanobox/. /opt/nanobox/
+# Download hooks md5 (used to perform updates)
+RUN curl \
+      -f \
+      -k \
+      -o /var/nanobox/hooks.md5 \
+      https://s3.amazonaws.com/tools.nanobox.io/hooks/code-stable.md5
 
 # Run runit automatically
 CMD [ "/opt/gonano/bin/nanoinit" ]
