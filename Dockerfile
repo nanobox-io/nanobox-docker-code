@@ -8,7 +8,7 @@ RUN mkdir -p \
 
 # Install nfs client
 RUN apt-get update -qq && \
-    apt-get install -y nfs-common && \
+    apt-get install -y nfs-common cron && \
     apt-get clean all && \
     rm -rf /var/lib/apt/lists/*
 
