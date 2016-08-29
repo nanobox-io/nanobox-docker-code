@@ -17,9 +17,6 @@ RUN apt-get update -qq && \
 RUN rm -rf /data && \
     mkdir -p /data
 
-# install gem for code hooks
-RUN /opt/gonano/bin/gem install remote_syslog_logger
-
 # Install hooks
 RUN curl \
       -f \
