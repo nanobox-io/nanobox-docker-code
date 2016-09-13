@@ -1,26 +1,35 @@
 FROM nanobox/runit
 
 # Create directories
-RUN mkdir -p /var/log/gonano
-RUN mkdir -p /opt/bin
+RUN mkdir -p \
+  /var/log/gonano \
+  /var/nanobox \
+  /opt/nanobox/hooks
 
-# Copy files
-ADD hookit/. /opt/gonano/hookit/mod/
-ADD files/opt/bin/. /opt/bin/
+# Install nfs client
+RUN apt-get update -qq && \
+    apt-get install -y nfs-common cron && \
+    apt-get clean all && \
+    rm -rf /var/lib/apt/lists/*
 
 # remove pkgsrc base bootstrap to save space
 # since it's replaced by the build and not used
 RUN rm -rf /data && \
     mkdir -p /data
 
-# Allow nfs mounts
-RUN apt-get update -qq && \
-    apt-get install -y nfs-common && \
-    apt-get clean all && \
-    rm -rf /var/lib/apt/lists/*
+# Install hooks
+RUN curl \
+      -f \
+      -k \
+      https://s3.amazonaws.com/tools.nanobox.io/hooks/code-stable.tgz \
+        | tar -xz -C /opt/nanobox/hooks
 
-# Cleanup disk
-RUN rm -rf /tmp/* /var/tmp/*
+# Download hooks md5 (used to perform updates)
+RUN curl \
+      -f \
+      -k \
+      -o /var/nanobox/hooks.md5 \
+      https://s3.amazonaws.com/tools.nanobox.io/hooks/code-stable.md5
 
 # Run runit automatically
-CMD /opt/gonano/bin/nanoinit
+CMD [ "/opt/gonano/bin/nanoinit" ]
