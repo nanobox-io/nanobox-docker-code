@@ -21,7 +21,7 @@ RUN rm -rf /data && \
 RUN curl \
       -f \
       -k \
-      https://s3.amazonaws.com/tools.nanobox.io/hooks/code-stable.tgz \
+      https://d1ormdui8qdvue.cloudfront.net/hooks/code-stable.tgz \
         | tar -xz -C /opt/nanobox/hooks
 
 # Download hooks md5 (used to perform updates)
@@ -29,7 +29,7 @@ RUN curl \
       -f \
       -k \
       -o /var/nanobox/hooks.md5 \
-      https://s3.amazonaws.com/tools.nanobox.io/hooks/code-stable.md5
+      https://d1ormdui8qdvue.cloudfront.net/hooks/code-stable.md5
 
 # Run runit automatically
 CMD [ "/opt/gonano/bin/nanoinit" ]
