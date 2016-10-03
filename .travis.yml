@@ -11,3 +11,16 @@ before_install:
   - docker build -t nanobox/code .
 
 script: sudo test/run_all.sh
+
+after_success:
+  - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+  - docker build -t ${NAMESPACE}/code .
+  - docker tag ${NAMESPACE}/code ${NAMESPACE}/code:beta;
+  - docker push ${REMOTE}${NAMESPACE}/code:beta;
+  - if [ "$BRANCH" == "master" ]; then
+    docker push ${REMOTE}${NAMESPACE}/code;
+    else
+    docker tag ${NAMESPACE}/code ${NAMESPACE}/code:${BRANCH//\//_};
+    docker push ${REMOTE}${NAMESPACE}/code:${BRANCH//\//_};
+    fi
