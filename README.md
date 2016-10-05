@@ -1,4 +1,4 @@
-## nanobox-docker-code ![Build Status Image](https://travis-ci.org/nanobox-io/nanobox-docker-code.svg)
+## nanobox-docker-code [![Build Status Image](https://travis-ci.org/nanobox-io/nanobox-docker-code.svg)](https://travis-ci.org/nanobox-io/nanobox-docker-code)
 
 This repo contains the files necessary to create the code docker image for [Nanobox](http://nanobox.io) consumption.
 
