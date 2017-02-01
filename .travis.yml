@@ -22,6 +22,7 @@ after_success:
   - docker tag ${NAMESPACE}/code:squashed ${NAMESPACE}/code:beta;
   - docker push ${REMOTE}${NAMESPACE}/code:beta;
   - if [ "$BRANCH" == "master" ]; then
+    docker tag ${NAMESPACE}/code:squashed ${NAMESPACE}/code;
     docker push ${REMOTE}${NAMESPACE}/code;
     else
     docker tag ${NAMESPACE}/code:squashed ${NAMESPACE}/code:${BRANCH//\//_};
